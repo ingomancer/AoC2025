@@ -2,6 +2,7 @@ use std::{error::Error, fs, path::Path, time::Instant};
 
 mod day1;
 mod day2;
+mod day3;
 fn main() -> Result<(), Box<dyn Error>> {
     let day: i32 = std::env::args()
         .nth(1)
@@ -10,7 +11,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         .unwrap_or(-1);
     if day == -1 {
         let now = Instant::now();
-        for i in 1..=2 {
+        for i in 1..=3 {
             run_day(i, false)?;
         }
         println!("{}", now.elapsed().as_secs_f32());
@@ -31,6 +32,7 @@ fn run_day(day: i32, print: bool) -> Result<(), Box<dyn Error>> {
     let day_func = match day {
         1 => day1::run,
         2 => day2::run,
+        3 => day3::run,
         _ => unknown_day,
     };
     let now = Instant::now();
