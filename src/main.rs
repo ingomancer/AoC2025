@@ -3,6 +3,11 @@ use std::{error::Error, fs, path::Path, time::Instant};
 mod day1;
 mod day2;
 mod day3;
+mod day4;
+// NEXT DAY
+
+const MAX_DAY: i32 = 4;
+
 fn main() -> Result<(), Box<dyn Error>> {
     let day: i32 = std::env::args()
         .nth(1)
@@ -11,7 +16,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         .unwrap_or(-1);
     if day == -1 {
         let now = Instant::now();
-        for i in 1..=3 {
+        for i in 1..=MAX_DAY {
             run_day(i, false)?;
         }
         println!("{}", now.elapsed().as_secs_f32());
@@ -33,6 +38,7 @@ fn run_day(day: i32, print: bool) -> Result<(), Box<dyn Error>> {
         1 => day1::run,
         2 => day2::run,
         3 => day3::run,
+        4 => day4::run,
         _ => unknown_day,
     };
     let now = Instant::now();

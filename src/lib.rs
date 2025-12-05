@@ -2,6 +2,10 @@ use std::ops::{Add, Div, Mul, Sub};
 
 use num::Num;
 
+pub fn in_range_inclusive<T: PartialOrd>(val: &T, start: &T, stop: &T) -> bool {
+    val >= start && val <= stop
+}
+
 // [a.0,a.1] + [b.0,b.1] = [a.0 + b.0, a.1 + b.1]
 pub fn add_tuple<T: Add<Output = T>>(a: (T, T), b: (T, T)) -> (T, T) {
     (a.0 + b.0, a.1 + b.1)
