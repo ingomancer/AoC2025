@@ -3,10 +3,10 @@ use std::{error::Error, fs, path::Path, time::Instant};
 mod day1;
 mod day2;
 mod day3;
-mod day4;
+mod day5;
 // NEXT DAY
 
-const MAX_DAY: i32 = 4;
+const MAX_DAY: i32 = 5;
 
 fn main() -> Result<(), Box<dyn Error>> {
     let day: i32 = std::env::args()
@@ -38,7 +38,7 @@ fn run_day(day: i32, print: bool) -> Result<(), Box<dyn Error>> {
         1 => day1::run,
         2 => day2::run,
         3 => day3::run,
-        4 => day4::run,
+        4 => day5::run,
         _ => unknown_day,
     };
     let now = Instant::now();
