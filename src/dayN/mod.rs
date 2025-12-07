@@ -1,5 +1,5 @@
 pub fn run(input: String) -> (String, String) {
-    let mut lines = input.lines();
+    let lines = input.lines();
     (format!(""), format!(""))
 }
 
