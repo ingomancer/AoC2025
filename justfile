@@ -18,7 +18,7 @@ init day:
     cp -r src/dayN/* src/day{{day}}/
     sed -i '{{new_day_line}}i {{day}} => day{{day}}::run,' src/main.rs
     sed -i '{{next_day_line}}i mod day{{day}};' src/main.rs
-    sed -iE 's/const MAX_DAY: i32 = [0-9]\+;/const MAX_DAY: i32 = {{day}};/g' src/main.rs
+    sed -i 's/const MAX_DAY: i32 = [0-9]\+;/const MAX_DAY: i32 = {{day}};/g' src/main.rs
 
 fix:
     cargo clippy --fix --allow-dirty

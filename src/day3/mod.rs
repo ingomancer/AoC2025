@@ -22,8 +22,8 @@ fn bank_joltage(bank: &[u32], size: usize) -> u64 {
         for n in 0..size {
             if nums[n] > batts[n] {
                 batts[n] = nums[n];
-                for k in n + 1..batts.len() {
-                    batts[k] = 0;
+                for k in batts.iter_mut().skip(n + 1) {
+                    *k = 0;
                 }
             }
         }
