@@ -13,3 +13,4 @@ rayon = "1.11.0"
 lto = true
 codegen-units = 1
 panic = "abort"
+overflow-checks = true
