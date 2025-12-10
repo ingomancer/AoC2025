@@ -1,5 +1,6 @@
 use std::collections::{HashSet, VecDeque};
 
+use microlp::{LinearExpr, Problem};
 use rayon::{iter::ParallelIterator, str::ParallelString};
 
 pub fn run(input: String) -> (String, String) {
@@ -10,7 +11,6 @@ pub fn run(input: String) -> (String, String) {
                 return (0, 0);
             }
             let mut p1 = None;
-            let mut p2 = None;
             let mut splits = line.split_ascii_whitespace().collect::<Vec<&str>>();
             let target = splits
                 .remove(0)
@@ -22,7 +22,7 @@ pub fn run(input: String) -> (String, String) {
             let jolts = jolts[1..jolts.len() - 1]
                 .split(',')
                 .map(|x| x.parse().unwrap())
-                .collect::<Vec<u32>>();
+                .collect::<Vec<usize>>();
             let cur_state = vec![false; target.len()];
             let buttons = splits
                 .iter()
@@ -30,9 +30,9 @@ pub fn run(input: String) -> (String, String) {
                     x.chars()
                         .filter(|x| x.is_numeric())
                         .map(|x| x.to_digit(10).unwrap() as usize)
-                        .collect::<HashSet<usize>>()
+                        .collect::<Vec<usize>>()
                 })
-                .collect::<Vec<HashSet<usize>>>();
+                .collect::<Vec<Vec<usize>>>();
 
             let mut tried = HashSet::new();
             let mut next = VecDeque::new();
@@ -68,47 +68,28 @@ pub fn run(input: String) -> (String, String) {
                 }
             }
 
-            let mut tried = HashSet::new();
-            let mut next = VecDeque::new();
+            let mut problem = Problem::new(microlp::OptimizationDirection::Minimize);
 
-            let cur_state = vec![0; jolts.len()];
-            for button in &buttons {
-                let next_state = press_button_jolts(&cur_state, button);
-                if next_state == jolts {
-                    p2 = Some(1);
-                    break;
+            let mut vars = vec![];
+
+            buttons
+                .iter()
+                .for_each(|_| vars.push(problem.add_integer_var(1.0, (0, i32::MAX))));
+
+            for (index, target) in jolts.iter().enumerate() {
+                let mut expr = LinearExpr::empty();
+                for (button, val) in buttons.iter().enumerate() {
+                    if val.contains(&index) {
+                        expr.add(vars[button], 1.0);
+                    }
                 }
-                tried.insert(next_state.clone());
-                next.push_back((next_state, 1));
+                problem.add_constraint(expr, microlp::ComparisonOp::Eq, *target as f64);
             }
-            while let Some((state, depth)) = next.pop_front() {
-                if p2.is_some() {
-                    break;
-                }
-                for button in &buttons {
-                    let next_state = press_button_jolts(&state, button);
 
-                    if tried.contains(&next_state) {
-                        continue;
-                    }
-
-                    tried.insert(next_state.clone());
-
-                    if next_state
-                        .iter()
-                        .zip(&jolts)
-                        .any(|(val, target)| val > target)
-                    {
-                        continue;
-                    }
-                    if next_state == jolts {
-                        p2 = Some(depth + 1);
-                        break;
-                    }
-                    next.push_back((next_state, depth + 1));
-                }
-            }
-            (p1.unwrap(), p2.unwrap())
+            (
+                p1.unwrap(),
+                problem.solve().unwrap().objective().round() as u32,
+            )
         })
         .reduce(
             || (0, 0),
@@ -118,7 +99,7 @@ pub fn run(input: String) -> (String, String) {
     (format!("{part1}"), format!("{part2}"))
 }
 
-fn press_button(state: &[bool], button: &HashSet<usize>) -> Vec<bool> {
+fn press_button(state: &[bool], button: &Vec<usize>) -> Vec<bool> {
     state
         .iter()
         .enumerate()
@@ -126,7 +107,7 @@ fn press_button(state: &[bool], button: &HashSet<usize>) -> Vec<bool> {
         .collect()
 }
 
-fn press_button_jolts(state: &[u32], button: &HashSet<usize>) -> Vec<u32> {
+fn press_button_jolts(state: &[u32], button: &Vec<usize>) -> Vec<u32> {
     state
         .iter()
         .enumerate()

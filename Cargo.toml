@@ -7,6 +7,7 @@ edition = "2024"
 geo = "0.32.0"
 indoc = "2.0.7"
 itertools = "0.14.0"
+microlp = "0.2.11"
 num = "0.4.3"
 rayon = "1.11.0"
 
