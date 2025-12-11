@@ -99,19 +99,11 @@ pub fn run(input: String) -> (String, String) {
     (format!("{part1}"), format!("{part2}"))
 }
 
-fn press_button(state: &[bool], button: &Vec<usize>) -> Vec<bool> {
+fn press_button(state: &[bool], button: &[usize]) -> Vec<bool> {
     state
         .iter()
         .enumerate()
         .map(|(index, x)| if button.contains(&index) { !x } else { *x })
-        .collect()
-}
-
-fn press_button_jolts(state: &[u32], button: &Vec<usize>) -> Vec<u32> {
-    state
-        .iter()
-        .enumerate()
-        .map(|(index, x)| if button.contains(&index) { x + 1 } else { *x })
         .collect()
 }
 
