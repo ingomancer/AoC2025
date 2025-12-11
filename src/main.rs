@@ -10,9 +10,10 @@ mod day7;
 mod day8;
 mod day9;
 mod day10;
+mod day11;
 // NEXT DAY
 
-const MAX_DAY: i32 = 10;
+const MAX_DAY: i32 = 11;
 
 fn main() -> Result<(), Box<dyn Error>> {
     let day: i32 = std::env::args()
@@ -51,6 +52,7 @@ fn run_day(day: i32, print: bool) -> Result<(), Box<dyn Error>> {
 8 => day8::run,
 9 => day9::run,
 10 => day10::run,
+11 => day11::run,
         _ => unknown_day,
     };
     let now = Instant::now();
